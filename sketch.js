@@ -1,6 +1,8 @@
 let height = null;
 let width = null;
+let isMobile;
 async function setup() {
+  isMobile = deviceIsMobile();
   textFont("Rubik Wet Paint");
   textFont("Black Ops One");
 

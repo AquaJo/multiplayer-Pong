@@ -1,12 +1,12 @@
 var released = true;
-function mouseReleased(){
+function mouseReleased(){ // workaround for mobile - bug on chrome --> double recognition mousePressed
 	released = true;
 	return false;
 }
 
 
 async function mousePressed() {
-  if(!released){
+  if(!released){ // workaround for mobile - bug on chrome --> double recognition mousePressed
 		return;
 	}
 	released = false;
@@ -88,6 +88,10 @@ async function mousePressed() {
     if (mouseInGameCodeCopy(3)) {
       navigator.clipboard.writeText(code);
     }
+  }
+  if (isMobile) {
+    mouseX = 2*width;
+    mouseY = 2*height;
   }
 }
 
