@@ -89,7 +89,7 @@ async function mousePressed() {
       navigator.clipboard.writeText(code);
     }
   }
-  if (isMobile) {
+  if (1==1) {
     mouseX = 2*width;
     mouseY = 2*height;
   }
