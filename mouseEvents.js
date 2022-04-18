@@ -89,12 +89,17 @@ async function mousePressed() {
       navigator.clipboard.writeText(code);
     }
   }
-  if (1==1) {
-    mouseX = 2*width;
-    mouseY = 2*height;
+  if (isMobile) {
+    changeMouseCordsAfterTime(400);
   }
 }
 
+function changeMouseCordsAfterTime(time) {
+  setTimeout(function() {
+    mouseX = 2*width;
+    mouseY = 2*height;
+}, time);
+}
 function roomSettingsChanger() {
   if (mouseCopy()) {
     navigator.clipboard.writeText(code);
