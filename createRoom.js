@@ -19,6 +19,7 @@ async function registerPrivateRoom() {
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/scoresPerRound").set(roomSettingsScores);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/rounds").set(roomSettingsRounds);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/ballSpeed").set(roomSettingsBallSpeed);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barSpeed").set(roomSettingsBarSpeed);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/extras").set(roomSettingsExtras);
 
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/R").set(roomSettingsBackgroundR);
@@ -28,6 +29,13 @@ async function registerPrivateRoom() {
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/R").set(roomSettingsBarR);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/G").set(roomSettingsBarG);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/B").set(roomSettingsBarB);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/opponentReady").set(false);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1").set(0);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2").set(0);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1Y").set(955/2);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2Y").set(955/2);
+  let gameRef = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game");
+  gameRef.on("value", gotData, errData);
   console.log("successfull registration of private room");
   console.log("key: " + code);
   console.log("unixTimestamp: " + date);
@@ -45,7 +53,7 @@ let roomsSettingsSize;
 function roomSettings() {
   roomSettingsStartX = width / 9;
   roomSettingsStartY = (height / 6);
-  roomSettingsChangeRate = (height / 10);
+  roomSettingsChangeRate = (height / 11);
   textAlign(LEFT);
   textSize(uToF(70));
   roomSettingsSize = uToF(70);
@@ -58,6 +66,7 @@ function roomSettings() {
   scoresPerRound();
   rounds();
   ballSpeed();
+  barSpeed();
   extras();
   backgroundColor();
   barColors();
@@ -140,6 +149,28 @@ function ballSpeed() {
   }
   drawtext(roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, roomSettingsBallSpeedTxt, "LEFT", roomSettingsSize);
 }
+let roomSettingsBarSpeed = 10;
+
+function barSpeed() {
+  let finalColors = [];
+  roomSettingsBarSpeedTxt = [
+    ["bar speed: ", finalColors[0]],
+    [roomSettingsBarSpeed, finalColors[1]]
+  ];
+
+  if (mouseAddBarSpeed(1)) {
+    finalColors = [onButtonColCreateRoom, onButtonColCreateRoom];
+  } else if (mouseAddBarSpeed(2)) {
+    finalColors = [color, onButtonColCreateRoom];
+  } else {
+    finalColors = [color, color];
+  }
+  roomSettingsBarSpeedTxt = [
+    ["bar speed: ", finalColors[0]],
+    [roomSettingsBarSpeed, finalColors[1]]
+  ];
+  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsBarSpeedTxt);
+}
 let roomSettingsExtras = "off";
 
 function extras() {
@@ -163,7 +194,7 @@ function extras() {
       ["  " + roomSettingsExtras, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsExtrasTxt, "LEFT", roomSettingsSize);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, roomSettingsExtrasTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsBackgroundR = 20;
 let roomSettingsBackgroundG = 20;
@@ -199,7 +230,7 @@ function backgroundColor() {
     [" , ", finalColors[4]],
     [roomSettingsBackgroundB, finalColors[3]]
   ];
-  drawtext(roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, roomSettingsBackgroundTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, roomSettingsBackgroundTxt);
 }
 let roomSettingsBarR = 255;
 let roomSettingsBarG = 255;
@@ -235,7 +266,7 @@ function barColors() {
     [" , ", finalColors[4]],
     [roomSettingsBarB, finalColors[3]]
   ];
-  drawtext(roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, roomSettingsBarTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, roomSettingsBarTxt);
 }
 
 function createRoomButton() { // last line --> edited later on

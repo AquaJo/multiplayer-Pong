@@ -42,67 +42,22 @@ function draw() {
   } else if (mode === "createRoom") {
     createRoom();
   } else if (mode === "privateGameCreator") {
-    if (privateGameFirst) {
-      privateGameFirst = false;
-      bar1Y = height/2;
-    }
-    background(roomSettingsBackgroundR, roomSettingsBackgroundG, roomSettingsBackgroundB);
-    drawLines();
     privateGameCreator();
-    drawOwnBar();
+  } else if (mode === "privateGameJoiner") {
+    privateGameJoiner();
   }
-}
-let bar1Y;
-let privateGameFirst = true;
-function drawOwnBar() {
-  if (keyIsDown(87)) {
-    bar1Y -= height/80;
-  } else if (keyIsDown(83)) {
-    bar1Y += height/80;
-  }
-  fill(roomSettingsBarR, roomSettingsBarG, roomSettingsBarB);
-  noStroke();
-  rectMode(CENTER);
-  rect(width * (barsXFromEdge/100), bar1Y, width/75, height/10);
-}
-function drawLines() {
-  rectMode(CENTER);
-  fill(roomSettingsBarR,roomSettingsBarG,roomSettingsBarB);
-  noStroke();
-  for (let i = 0; i < 16; ++i) {
-    rect(width / 2, 40 * i, width / 300, height / 20);
+  if (mode === "privateGameCreator" || mode === "privateGameJoiner") { // upload of y coordinates of your bar, in interval of 3 changes
+    if (counterXY > 2) { // counterY - Changes (x is pointless ....)
+      counterXY = 0;
+      let final = (side === "LEFT") ? cToU(null, bar1Y) : cToU(null, bar2Y);
+      if (mode === "privateGameCreator") {
+        mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1Y").set(final);
+      } else if (mode === "privateGameJoiner") {
+        mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2Y").set(final);
+      }
+    }
   }
 }
 
-function privateGameCreator() {
-  textSize(uToF(32));
-  let finalColors = [];
-  privateGameCreatorCodeTxt = [
-    ["Code: " + code, finalColors[0]],
-    ["      ", finalColors[0]],
-    ["copy", finalColors[2]]
-  ];
-  if (mouseInGameCodeCopy(3)) {
-    finalColors = [offButtonCol, offButtonCol, onButtonColCreateRoom];
-  } else {
-    finalColors = [offButtonCol, offButtonCol, offButtonCol];
-  }
-  privateGameCreatorCodeTxt = [
-    ["Code: " + code, finalColors[0]],
-    ["      ", finalColors[0]],
-    ["copy", finalColors[2]]
-  ];
-  drawtext(width / 2, height / 24, privateGameCreatorCodeTxt, "CENTER", uToF(32));
-
-  textSize(uToF(70));
-  textAlign(CENTER);
-  fill(offButtonCol[0] / 1.3, offButtonCol[1], offButtonCol[2]);
-  text("wait for opponent", width / 2, height / 5);
-  textAlign(LEFT);
-}
-
-
-
-function gotData() {}
 
 function errData() {}

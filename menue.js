@@ -50,10 +50,12 @@ function mainMenue() {
 
 let input = true;
 let inpJ;
+let inpJText;
 function inputOnceJ() {
   if (input == true && width != null && height != null) {
     input = false;
     inpJ = createInput();
+    inpJ.input(inpJEvent);
     inpJ.show();
     inpJ.position(width / 4.7 + width / 5, height / 2.35);
     inpJ.style('height', height / 20 + "px");
@@ -66,4 +68,7 @@ function inputOnceJ() {
     inpJ.style('box-sizing:border-box');
     inpJ.style('transition:.0s');
   }
+}
+function inpJEvent() {
+  inpJText = this.value();
 }

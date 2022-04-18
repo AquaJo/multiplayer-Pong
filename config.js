@@ -6,20 +6,11 @@ let childPrivateRoomsPath = "privateRooms/";
 // aesthetic
 let offButtonCol = [233,233,233];
 
-let onButtonCol = [];
-onButtonCol[0] = 176;
-onButtonCol[1] = 196;
-onButtonCol[2] = 222;
+let onButtonCol = [176,196,222];
 
-let onButtonColCreateRoom = []
-onButtonColCreateRoom[0] = 255;
-onButtonColCreateRoom[1] = 140;
-onButtonColCreateRoom[2] = 0;
+let onButtonColCreateRoom = [255,140,0]
 
-let backgroundCol = [];
-backgroundCol[0] = 20;
-backgroundCol[1] = 20;
-backgroundCol[2] = 20;
+let backgroundCol = [20,20,20];
 
 
 let barsXFromEdge = 8; // in percent from edge
@@ -40,5 +31,4 @@ function firebaseCfg() {
   firebase.initializeApp(firebaseConfig);
   database = firebase.database();
   mainRef = database.ref(mainPath);
-  mainRef.on("value", gotData, errData);
 }
