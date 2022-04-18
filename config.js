@@ -2,8 +2,10 @@
 // ref - settings (with /)
 let mainPath = "Pong/"
 let childUserpath = "Users/";
-
+let childPrivateRoomsPath = "privateRooms/";
 // aesthetic
+let offButtonCol = [233,233,233];
+
 let onButtonCol = [];
 onButtonCol[0] = 176;
 onButtonCol[1] = 196;
@@ -19,6 +21,8 @@ backgroundCol[0] = 20;
 backgroundCol[1] = 20;
 backgroundCol[2] = 20;
 
+
+let barsXFromEdge = 8; // in percent from edge
 // firebase - settings
 let mainRef;
 function firebaseCfg() {

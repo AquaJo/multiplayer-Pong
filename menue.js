@@ -6,7 +6,7 @@ function mainMenue() {
     if (mouseContinueResizeAgain()) {
       fill(onButtonCol[0], onButtonCol[1], onButtonCol[2]);
     } else {
-      fill(255, 255, 255);
+      fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
     }
     textAlign(LEFT);
     textFont("Black Ops One");
@@ -18,7 +18,7 @@ function mainMenue() {
     if (mouseContinueJoin()) {
       fill(onButtonCol[0], onButtonCol[1], onButtonCol[2]);
     } else {
-      fill(255, 255, 255);
+      fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
     }
     text(
       "join room",
@@ -38,7 +38,7 @@ function mainMenue() {
     if (mouseContinueCreate()) {
       fill(onButtonCol[0], onButtonCol[1], onButtonCol[2]);
     } else {
-      fill(255, 255, 255);
+      fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
     }
     text(
       "create room",

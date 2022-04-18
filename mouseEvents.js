@@ -1,4 +1,16 @@
+var released = true;
+function mouseReleased(){
+	released = true;
+	return false;
+}
+
+
 async function mousePressed() {
+  if(!released){
+		return;
+	}
+	released = false;
+
   // resizer buttons
   if (mode === "resizer") {
     let changeR = height / 180;
@@ -13,9 +25,11 @@ async function mousePressed() {
     } else if (mouseContinueZoom()) { // continue
       input = true;
       mode = "menue";
-      mainRef.child(childUserpath + "/" + enIP + "/date").set(await getUnixTimestamp());
+      let date = await getUnixTimestamp();
+      mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
       mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
       mainRef.child(childUserpath + "/" + enIP + "/height").set(height);
+      console.log("unixTimestamp: " + date);
       console.log("user-IP got registrated on database with expiretime of 1 week");
       console.groupEnd();
     }
@@ -36,110 +50,161 @@ async function mousePressed() {
       //
       mode = "resizer";
     } else if (mouseContinueCreate()) {
+      roomSettingsScores = 5; // as of 2022.4.17
+      roomSettingsRounds = 3;
+      roomSettingsBallSpeed = 10;
+      roomSettingsExtras = "off";
+      roomSettingsBackgroundR = 20;
+      roomSettingsBackgroundG = 20;
+      roomSettingsBackgroundB = 20;
+      roomSettingsBarR = 255;
+      roomSettingsBarG = 255;
+      roomSettingsBarB = 255;
+      inpJ.show();
       mode = "createRoom";
     }
   } else if (mode === "createRoom") {
-    if (mouseCopy()) {
-      navigator.clipboard.writeText(code);
-      buttonAnimation = true;
-    } else if (mouseAddScores(1) || mouseAddScores(2)) {
-      if (roomSettingsScores < 10) {
-        roomSettingsScores++;
-      } else {
-        roomSettingsScores = 1;
-      }
-    } else if (mouseAddRounds(1) || mouseAddRounds(2)) {
-      if (roomSettingsRounds < 10) {
-        roomSettingsRounds++;
-      } else {
-        roomSettingsRounds = 1;
-      }
-    } else if (mouseAddBallSpeed(1) || mouseAddBallSpeed(2)) {
-      if (roomSettingsBallSpeed < 20) {
-        roomSettingsBallSpeed++;
-      } else {
-        roomSettingsBallSpeed = 1;
-      }
-    } else if (mouseChangeExtras(1) || mouseChangeExtras(2)) {
-      if (roomSettingsExtras === "off") {
-        roomSettingsExtras = "on";
-      } else {
-        roomSettingsExtras = "off";
-      }
-    } else if (mouseAddBackground(2)) {
-      if (roomSettingsBackgroundR < 255) {
-        roomSettingsBackgroundR += 5;
-      } else {
-        roomSettingsBackgroundR = 0;
-      }
-    } else if (mouseAddBackground(4)) {
-      if (roomSettingsBackgroundG < 255) {
-        roomSettingsBackgroundG += 5;
-      } else {
-        roomSettingsBackgroundG = 0;
-      }
-    } else if (mouseAddBackground(6)) {
-      if (roomSettingsBackgroundB < 255) {
-        roomSettingsBackgroundB += 5;
-      } else {
-        roomSettingsBackgroundB = 0;
-      }
-    } else if (mouseAddBackground(1)) {
-      if (roomSettingsBackgroundR + 20 <= 255) {
-        roomSettingsBackgroundR += 20;
-      } else {
-        roomSettingsBackgroundR = roomSettingsBackgroundR + 20 - 255;
-      }
-      if (roomSettingsBackgroundG + 20 <= 255) {
-        roomSettingsBackgroundG += 20;
-      } else {
-        roomSettingsBackgroundG = roomSettingsBackgroundG + 20 - 255;
-      }
-      if (roomSettingsBackgroundB + 20 <= 255) {
-        roomSettingsBackgroundB += 20;
-      } else {
-        roomSettingsBackgroundB = roomSettingsBackgroundB + 20 - 255;
-      }
-    } else if (mouseAddBar(1)) {
-      if (roomSettingsBarR + 20 <= 255) {
-        roomSettingsBarR += 20;
-      } else {
-        roomSettingsBarR = roomSettingsBarR + 20 - 255;
-      }
-      if (roomSettingsBarG + 20 <= 255) {
-        roomSettingsBarG += 20;
-      } else {
-        roomSettingsBarG = roomSettingsBarG + 20 - 255;
-      }
-      if (roomSettingsBarB + 20 <= 255) {
-        roomSettingsBarB += 20;
-      } else {
-        roomSettingsBarB = roomSettingsBarB + 20 - 255;
-      }
-    } else if (mouseAddBar(2)) {
-      if (roomSettingsBarR < 255) {
-        roomSettingsBarR += 5;
-      } else {
-        roomSettingsBarR = 0;
-      }
-    } else if (mouseAddBar(4)) {
-      if (roomSettingsBarG < 255) {
-        roomSettingsBarG += 5;
-      } else {
-        roomSettingsBarG = 0;
-      }
-    } else if (mouseAddBar(6)) {
-      if (roomSettingsBarB < 255) {
-        roomSettingsBarB += 5;
-      } else {
-        roomSettingsBarB = 0;
-      }
+    roomSettingsChanger();
+    if (mouseRoomSettingsLastLine(3)) {
+      let refStr = mainPath + "/" + childPrivateRoomsPath;
+      let ref = database.ref(refStr);
+      await ref.once('value').then(async function(snapshot) {
+        if (snapshot.val() != null) {
+          let keys = Object.keys(snapshot.val());
+          if (keys.includes(code)) {
+            createRoomStart = true;
+          } else {
+            registerPrivateRoom();
+          }
+        } else {
+          registerPrivateRoom();
+        }
+      });
+    } else if (mouseRoomSettingsLastLine(1)) {
+      mode = "menue";
     }
-    //
+  } else if (mode === "privateGameCreator") {
+    textSize(uToF(32));
+    if (mouseInGameCodeCopy(3)) {
+      navigator.clipboard.writeText(code);
+    }
+  }
+}
+
+function roomSettingsChanger() {
+  if (mouseCopy()) {
+    navigator.clipboard.writeText(code);
+    buttonAnimation = true;
+  } else if (mouseAddScores(1) || mouseAddScores(2)) {
+    if (roomSettingsScores < 10) {
+      roomSettingsScores++;
+    } else {
+      roomSettingsScores = 1;
+    }
+  } else if (mouseAddRounds(1) || mouseAddRounds(2)) {
+    if (roomSettingsRounds < 10) {
+      roomSettingsRounds++;
+    } else {
+      roomSettingsRounds = 1;
+    }
+  } else if (mouseAddBallSpeed(1) || mouseAddBallSpeed(2)) {
+    if (roomSettingsBallSpeed < 20) {
+      roomSettingsBallSpeed++;
+    } else {
+      roomSettingsBallSpeed = 1;
+    }
+  } else if (mouseChangeExtras(1) || mouseChangeExtras(2)) {
+    if (roomSettingsExtras === "off") {
+      roomSettingsExtras = "on";
+    } else {
+      roomSettingsExtras = "off";
+    }
+  } else if (mouseAddBackground(2)) {
+    if (roomSettingsBackgroundR < 255) {
+      roomSettingsBackgroundR += 5;
+    } else {
+      roomSettingsBackgroundR = 0;
+    }
+  } else if (mouseAddBackground(4)) {
+    if (roomSettingsBackgroundG < 255) {
+      roomSettingsBackgroundG += 5;
+    } else {
+      roomSettingsBackgroundG = 0;
+    }
+  } else if (mouseAddBackground(6)) {
+    if (roomSettingsBackgroundB < 255) {
+      roomSettingsBackgroundB += 5;
+    } else {
+      roomSettingsBackgroundB = 0;
+    }
+  } else if (mouseAddBackground(1)) {
+    if (roomSettingsBackgroundR + 20 <= 255) {
+      roomSettingsBackgroundR += 20;
+    } else {
+      roomSettingsBackgroundR = roomSettingsBackgroundR + 20 - 255;
+    }
+    if (roomSettingsBackgroundG + 20 <= 255) {
+      roomSettingsBackgroundG += 20;
+    } else {
+      roomSettingsBackgroundG = roomSettingsBackgroundG + 20 - 255;
+    }
+    if (roomSettingsBackgroundB + 20 <= 255) {
+      roomSettingsBackgroundB += 20;
+    } else {
+      roomSettingsBackgroundB = roomSettingsBackgroundB + 20 - 255;
+    }
+  } else if (mouseAddBar(1)) {
+    if (roomSettingsBarR + 20 <= 255) {
+      roomSettingsBarR += 20;
+    } else {
+      roomSettingsBarR = roomSettingsBarR + 20 - 255;
+    }
+    if (roomSettingsBarG + 20 <= 255) {
+      roomSettingsBarG += 20;
+    } else {
+      roomSettingsBarG = roomSettingsBarG + 20 - 255;
+    }
+    if (roomSettingsBarB + 20 <= 255) {
+      roomSettingsBarB += 20;
+    } else {
+      roomSettingsBarB = roomSettingsBarB + 20 - 255;
+    }
+  } else if (mouseAddBar(2)) {
+    if (roomSettingsBarR < 255) {
+      roomSettingsBarR += 5;
+    } else {
+      roomSettingsBarR = 0;
+    }
+  } else if (mouseAddBar(4)) {
+    if (roomSettingsBarG < 255) {
+      roomSettingsBarG += 5;
+    } else {
+      roomSettingsBarG = 0;
+    }
+  } else if (mouseAddBar(6)) {
+    if (roomSettingsBarB < 255) {
+      roomSettingsBarB += 5;
+    } else {
+      roomSettingsBarB = 0;
+    }
   }
 }
 
 // touch sensors for buttons --> due to getTextCords() function
+let privateGameCreatorCodeTxt;
+
+function mouseInGameCodeCopy(item) {
+  txtCords = getTextCords(privateGameCreatorCodeTxt, item, width / 2, height / 24, "CENTER", uToF(32));
+  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+}
+
+
+let roomSettingsLastLineTxt;
+
+function mouseRoomSettingsLastLine(item) {
+  txtCords = getTextCords(roomSettingsLastLineTxt, item, width / 2, height / 1.14, "CENTER", uToF(70));
+  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+}
 let roomSettingsScoresPerRoundTxt;
 
 function mouseAddScores(item) {

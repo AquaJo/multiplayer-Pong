@@ -4,10 +4,35 @@ function createRoom() {
   textAlign(CENTER);
   inpJ.hide();
 
-  createRoomButton();
   codeDisplay();
   codeCopy();
+  createRoomButton();
   roomSettings();
+}
+
+async function registerPrivateRoom() {
+  console.group("register private room");
+  privateGameFirst = true;
+  mode = "privateGameCreator";
+  let date = await getUnixTimestamp();
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/date").set(date);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/scoresPerRound").set(roomSettingsScores);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/rounds").set(roomSettingsRounds);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/ballSpeed").set(roomSettingsBallSpeed);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/extras").set(roomSettingsExtras);
+
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/R").set(roomSettingsBackgroundR);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/G").set(roomSettingsBackgroundG);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/B").set(roomSettingsBackgroundB);
+
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/R").set(roomSettingsBarR);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/G").set(roomSettingsBarG);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barColors/B").set(roomSettingsBarB);
+  console.log("successfull registration of private room");
+  console.log("key: " + code);
+  console.log("unixTimestamp: " + date);
+  console.log("expiring time: 30 minutes");
+  console.groupEnd();
 }
 
 let txt;
@@ -24,10 +49,10 @@ function roomSettings() {
   textAlign(LEFT);
   textSize(uToF(70));
   roomSettingsSize = uToF(70);
-  if (mouseCreateRoom()) {
+  if (mouseRoomSettingsLastLine(3)) {
     color = [onButtonColCreateRoom[0] / 2, onButtonColCreateRoom[1], onButtonColCreateRoom[2]];
   } else {
-    color = [255, 255, 255];
+    color = offButtonCol; // because offButtonCol later added
   }
 
   scoresPerRound();
@@ -62,7 +87,7 @@ function scoresPerRound() {
   }
 
 
-  drawtext(roomSettingsStartX, roomSettingsStartY + 1 * roomSettingsChangeRate, roomSettingsScoresPerRoundTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 1 * roomSettingsChangeRate, roomSettingsScoresPerRoundTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsRounds = 3;
 
@@ -87,7 +112,7 @@ function rounds() {
       ["  " + roomSettingsRounds, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 2 * roomSettingsChangeRate, roomSettingsRoundsTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 2 * roomSettingsChangeRate, roomSettingsRoundsTxt, "LEFT", roomSettingsSize);
 }
 
 let roomSettingsBallSpeed = 10;
@@ -113,7 +138,7 @@ function ballSpeed() {
       ["  " + roomSettingsBallSpeed, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, roomSettingsBallSpeedTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, roomSettingsBallSpeedTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsExtras = "off";
 
@@ -138,7 +163,7 @@ function extras() {
       ["  " + roomSettingsExtras, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsExtrasTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsExtrasTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsBackgroundR = 20;
 let roomSettingsBackgroundG = 20;
@@ -179,6 +204,7 @@ function backgroundColor() {
 let roomSettingsBarR = 255;
 let roomSettingsBarG = 255;
 let roomSettingsBarB = 255;
+
 function barColors() {
   let finalColors = [];
   roomSettingsBarTxt = [
@@ -212,22 +238,28 @@ function barColors() {
   drawtext(roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, roomSettingsBarTxt);
 }
 
-
-
-
-
-
-function createRoomButton() {
-  if (mouseCreateRoom()) {
-    fill(onButtonColCreateRoom[0], onButtonColCreateRoom[1], onButtonColCreateRoom[2]);
+function createRoomButton() { // last line --> edited later on
+  textAlign(LEFT);
+  textSize(uToF(70));
+  let finalColors = [];
+  roomSettingsLastLineTxt = [
+    ["back", finalColors[0]],
+    ["                          ", null],
+    ["create room", finalColors[1]]
+  ];
+  if (mouseRoomSettingsLastLine(1)) {
+    finalColors = [onButtonColCreateRoom, offButtonCol];
+  } else if (mouseRoomSettingsLastLine(3)) {
+    finalColors = [offButtonCol, onButtonColCreateRoom];
   } else {
-    fill(255, 255, 255);
+    finalColors = [offButtonCol, offButtonCol];
   }
-  text(
-    "create Room",
-    width / 2,
-    height / 1.1
-  );
+  roomSettingsLastLineTxt = [
+    ["back", finalColors[0]],
+    ["                          ", null],
+    ["create room", finalColors[1]]
+  ];
+  drawtext(width / 2, height / 1.14, roomSettingsLastLineTxt, "CENTER", uToF(70));
 }
 
 function codeDisplay() {
@@ -236,11 +268,16 @@ function codeDisplay() {
     createRoomStart = false;
   }
   textAlign(CENTER);
-  if (mouseCreateRoom()) {
-    fill(onButtonColCreateRoom[0] / 1.4, onButtonColCreateRoom[1], onButtonColCreateRoom[2]);
-  } else {
-    color = [255, 255, 255];
-    fill(255, 255, 255);
+  try {
+    if (mouseRoomSettingsLastLine(3)) {
+      fill(onButtonColCreateRoom[0] / 1.4, onButtonColCreateRoom[1], onButtonColCreateRoom[2]);
+    } else {
+      color = offButtonCol;
+      fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
+    }
+  } catch (error) {
+    color = offButtonCol;
+    fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
   }
   text(
     "Code: " + code,
@@ -271,7 +308,7 @@ function codeCopy() {
   if (mouseCopy()) {
     fill(onButtonColCreateRoom[0], onButtonColCreateRoom[1], onButtonColCreateRoom[2]);
   } else {
-    fill(255, 255, 255);
+    fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
   }
   // button click animation
   if (buttonAnimation) {
