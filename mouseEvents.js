@@ -33,6 +33,11 @@ async function mousePressed() {
       console.log("unixTimestamp: " + date);
       console.log("user-IP got registrated on database with expiretime of 1 week");
       console.groupEnd();
+    } else {
+      textSize(uToF(40));
+      if (mouseChangeIPSave(1)) {
+        resizerChoice = "IP";
+      }
     }
   } else if (mode === "menue") {
     if (mouseContinueResizeAgain()) {
@@ -324,6 +329,13 @@ function roomSettingsChanger() {
 let inGameBackTxt = [
   ["back", [0, 0, 0]],
 ];
+
+let resizerIPTxt;
+
+function mouseChangeIPSave(item) {
+  let txtCords = getTextCords(resizerIPTxt, item, resizerSettingsStartX, resizerSettingsStartY + 1 * resizerSettingsChangeRate, "LEFT", uToF(40));
+  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+}
 
 function mouseInGameBack(item) {
   txtCords = getTextCords(inGameBackTxt, item, width / 120, height / 22, "LEFT", uToF(38));
