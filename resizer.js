@@ -15,11 +15,11 @@ function resizer() {
   background(backgroundCol[0], backgroundCol[1], backgroundCol[2]);
   resizeOptions();
   // text objects
-  textSize(uToF(80));
+  textSize(uToF(70));
   fill(255, 255, 255);
   textAlign(CENTER);
   text(
-    "for best fitting: resize window with - / +",
+    "for the best fitting: resize window with - / +",
     width / 2,
     height / 2.5
   );
