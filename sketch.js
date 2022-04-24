@@ -41,23 +41,9 @@ function draw() {
     mainMenue();
   } else if (mode === "createRoom") {
     createRoom();
-  } else if (mode === "privateGameCreator") {
-    privateGameCreator();
-  } else if (mode === "privateGameJoiner") {
-    privateGameJoiner();
-  }
-  if (mode === "privateGameCreator" || mode === "privateGameJoiner") { // upload of y coordinates of your bar, in interval of 3 changes
-    if (counterXY > 2) { // counterY - Changes (x is pointless ....)
-      counterXY = 0;
-      let final = (side === "LEFT") ? cToU(null, bar1Y) : cToU(null, bar2Y);
-      if (mode === "privateGameCreator") {
-        mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1Y").set(final);
-      } else if (mode === "privateGameJoiner") {
-        mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2Y").set(final);
-      }
-    }
+  } else if (mode === "privateGameCreator" || mode === "privateGameJoiner") { // upload of y coordinates of your bar, in interval of 3 changes
+    privateGame();
+  } else if (mode === "gameDeleted") {
+    gameDeleted();
   }
 }
-
-
-function errData() {}

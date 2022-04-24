@@ -17,7 +17,7 @@ async function registerPrivateRoom() {
   let date = await getUnixTimestamp();
   mainRef.child(childPrivateRoomsPath + "/" + code + "/date").set(date);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/scoresPerRound").set(roomSettingsScores);
-  mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/rounds").set(roomSettingsRounds);
+  //mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/rounds").set(roomSettingsRounds);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/ballSpeed").set(roomSettingsBallSpeed);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/barSpeed").set(roomSettingsBarSpeed);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/settings/extras").set(roomSettingsExtras);
@@ -34,8 +34,33 @@ async function registerPrivateRoom() {
   mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2").set(0);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1Y").set(955/2);
   mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2Y").set(955/2);
-  let gameRef = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game");
-  gameRef.on("value", gotData, errData);
+  //mainRef.child(childPrivateRoomsPath + "/" + code + "/game/creatorSide").set("LEFT");
+
+  //mainRef.child(childPrivateRoomsPath + "/" + code + "/game/path").set(1);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/yChange").set(0);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/score1").set(-1);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/score2").set(-1);
+  mainRef.child(childPrivateRoomsPath + "/" + code + "/game/ballY").set(-1);
+  let gameRefBallY = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/ballY");
+  gameRefBallY.on("value", gotDataBallY, errData);
+  let gameRefScore1 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/score1");
+  gameRefScore1.on("value", gotDataScore1, errData);
+  let gameRefScore2 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/score2");
+  gameRefScore2.on("value", gotDataScore2, errData);
+  let gameRefOpponentReady = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady");
+  let gameRefBar2 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/bar2");
+  let gameRefBar2Y = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/bar2Y");
+  //let gameRefPath = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/path");
+  let gameRefYChange = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/yChange");
+  path = 1;
+  gameRefYChange.on("value", gotDataYChange, errData);
+  //gameRefPath.on("value", gotDataPath, errData);
+  gameRefOpponentReady.on("value", gotDataOpponentReady, errData);
+  //gameRefBar1.on("value", gotDataBar1, errData);
+  gameRefBar2.on("value", gotDataBar2, errData);
+  //gameRefBar1Y.on("value", gotDataBar1Y, errData);
+  gameRefBar2Y.on("value", gotDataBar2Y, errData);
+
   console.log("successfull registration of private room");
   console.log("key: " + code);
   console.log("unixTimestamp: " + date);
@@ -53,7 +78,7 @@ let roomsSettingsSize;
 function roomSettings() {
   roomSettingsStartX = width / 9;
   roomSettingsStartY = (height / 6);
-  roomSettingsChangeRate = (height / 11);
+  roomSettingsChangeRate = (height / 10);
   textAlign(LEFT);
   textSize(uToF(70));
   roomSettingsSize = uToF(70);
@@ -64,7 +89,7 @@ function roomSettings() {
   }
 
   scoresPerRound();
-  rounds();
+  //rounds();
   ballSpeed();
   barSpeed();
   extras();
@@ -75,22 +100,22 @@ let roomSettingsScores = 5;
 
 function scoresPerRound() {
   roomSettingsScoresPerRoundTxt = [
-    ["scores per round:", null],
+    ["scores:", null],
     ["  " + roomSettingsScores, null]
   ];
   if (mouseAddScores(2)) { //&& mouseX < txtCords[1] ) {
     roomSettingsScoresPerRoundTxt = [
-      ["scores per round:", color],
+      ["scores:", color],
       ["  " + roomSettingsScores, onButtonColCreateRoom]
     ];
   } else if (mouseAddScores(1)) {
     roomSettingsScoresPerRoundTxt = [
-      ["scores per round:", onButtonColCreateRoom],
+      ["scores:", onButtonColCreateRoom],
       ["  " + roomSettingsScores, onButtonColCreateRoom]
     ];
   } else {
     roomSettingsScoresPerRoundTxt = [
-      ["scores per round:", color],
+      ["scores:", color],
       ["  " + roomSettingsScores, color]
     ];
   }
@@ -147,7 +172,7 @@ function ballSpeed() {
       ["  " + roomSettingsBallSpeed, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, roomSettingsBallSpeedTxt, "LEFT", roomSettingsSize);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 2 * roomSettingsChangeRate, roomSettingsBallSpeedTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsBarSpeed = 10;
 
@@ -169,7 +194,7 @@ function barSpeed() {
     ["bar speed: ", finalColors[0]],
     [roomSettingsBarSpeed, finalColors[1]]
   ];
-  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsBarSpeedTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, roomSettingsBarSpeedTxt);
 }
 let roomSettingsExtras = "off";
 
@@ -194,7 +219,7 @@ function extras() {
       ["  " + roomSettingsExtras, color]
     ];
   }
-  drawtext(roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, roomSettingsExtrasTxt, "LEFT", roomSettingsSize);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, roomSettingsExtrasTxt, "LEFT", roomSettingsSize);
 }
 let roomSettingsBackgroundR = 20;
 let roomSettingsBackgroundG = 20;
@@ -230,7 +255,7 @@ function backgroundColor() {
     [" , ", finalColors[4]],
     [roomSettingsBackgroundB, finalColors[3]]
   ];
-  drawtext(roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, roomSettingsBackgroundTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, roomSettingsBackgroundTxt);
 }
 let roomSettingsBarR = 255;
 let roomSettingsBarG = 255;
@@ -266,7 +291,7 @@ function barColors() {
     [" , ", finalColors[4]],
     [roomSettingsBarB, finalColors[3]]
   ];
-  drawtext(roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, roomSettingsBarTxt);
+  drawtext(roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, roomSettingsBarTxt);
 }
 
 function createRoomButton() { // last line --> edited later on

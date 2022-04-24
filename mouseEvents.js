@@ -51,7 +51,7 @@ async function mousePressed() {
       //
       mode = "resizer";
     } else if (mouseContinueCreate()) {
-      roomSettingsScores = 5; // as of 2022.4.17
+      roomSettingsScores = 10; // as of 2022.4.17
       roomSettingsRounds = 3;
       roomSettingsBallSpeed = 10;
       roomSettingsBarSpeed = 10;
@@ -65,21 +65,21 @@ async function mousePressed() {
       inpJ.show();
       mode = "createRoom";
     } else if (mouseContinueJoin()) {
-      if (await privateGameExists(inpJText)) {
-        code = inpJText;
+      code = inpJText;
+      if (await privateGameExists(code) && !(await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady"))) {
         roomSettingsScores = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/scoresPerRound");
         roomSettingsRounds = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/rounds");
         roomSettingsBallSpeed = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/ballSpeed");
-        roomSettingsBarSpeed = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/barSpeed");
-        roomSettingsExtras = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/extras");
+        roomSettingsBarSpeed = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/barSpeed");
+        roomSettingsExtras = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/extras");
 
-        roomSettingsBackgroundR = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/R");
-        roomSettingsBackgroundG = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/G");
-        roomSettingsBackgroundB = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/B");
+        roomSettingsBackgroundR = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/R");
+        roomSettingsBackgroundG = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/G");
+        roomSettingsBackgroundB = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/backgroundColor/B");
 
-        roomSettingsBarR = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/barColors/R");
-        roomSettingsBarG = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/barColors/G");
-        roomSettingsBarB = await getData(mainPath+"/"+childPrivateRoomsPath + "/" + code + "/settings/barColors/B");
+        roomSettingsBarR = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/barColors/R");
+        roomSettingsBarG = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/barColors/G");
+        roomSettingsBarB = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/barColors/B");
         privateGameFirst = true;
         inpJ.hide();
         mode = "privateGameJoiner";
@@ -120,38 +120,67 @@ async function mousePressed() {
       direction1 = 0;
       side = "RIGHT";
     }
-    if (isMobile) {
-      changeMouseCordsAfterTime(400);
-    }
-    return;
   } else if (mode === "privateGameJoiner") {
     textSize(uToF(60));
     if (mousePrivateGameCreatorSide(1)) {
       direction2 = 0;
       side = "LEFT";
-      if (await privateGameExists(code)) {
-        let gameRef = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game");
-        gameRef.on("value", gotData, errData);
-        mainRef.child(childPrivateRoomsPath + "/" + code + "/game/opponentReady").set(true);
-        opponentReady = true;
-      } else {
-        mode = "menue";
-      }
     } else if (mousePrivateGameCreatorSide(2)) {
       direction1 = 0;
       side = "RIGHT";
-      if (await privateGameExists(code)) {
-        let gameRef = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game");
-        gameRef.on("value", gotData, errData);
+    }
+    if (mousePrivateGameCreatorSide(1) || mousePrivateGameCreatorSide(2)) {
+      if (await privateGameExists(code) && !(await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady"))) {
+        path = 0;
         mainRef.child(childPrivateRoomsPath + "/" + code + "/game/opponentReady").set(true);
+        let gameRefOpponentReady = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady");
+        let gameRefBar1 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/bar1");
+        let gameRefBar1Y = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/bar1Y");
+        //let gameRefPath = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/path");
+        let gameRefYChange = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/yChange");
+        let gameRefScore1 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/score1");
+        gameRefScore1.on("value", gotDataScore1, errData);
+        let gameRefScore2 = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/score2");
+        let gameRefBallY = database.ref(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/ballY");
+        gameRefBallY.on("value", gotDataBallY, errData);
+        gameRefScore2.on("value", gotDataScore2, errData);
+        gameRefOpponentReady.on("value", gotDataOpponentReady, errData);
+        gameRefYChange.on("value", gotDataYChange, errData);
+        //gameRefPath.on("value", gotDataPath, errData);
+        gameRefBar1.on("value", gotDataBar1, errData);
+        gameRefBar1Y.on("value", gotDataBar1Y, errData);
       } else {
-        mode = "menue";
+        if (!opponentReady) {
+          mode = "menue";
+        }
       }
     }
-    if (isMobile) {
-      changeMouseCordsAfterTime(400);
+  }
+  if (mode === "privateGameJoiner" || mode === "privateGameCreator" || mode === "gameDeleted") {
+    textSize(uToF(38));
+    textAlign(LEFT);
+    if (mouseInGameBack(1)) {
+      //console.log("menue");
+      if (await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady") === true) {
+        let refPath = mainPath + "/" + childPrivateRoomsPath;
+        let ref = database.ref(refPath);
+        ref.child(code).remove();
+      }
+      win = 2;
+      dodgeTimes = 0;
+      scoreOp = 0;
+      scoreMe = 0;
+      firstDataReceive = true;
+      opponentReady = false;
+      direction1 = 0;
+      direction2 = 0;
+      createRoomStart = true;
+      privateGameFirst = true;
+      timerGame = true;
+      timerNum = 4;
+      side = "LEFT";
+      mode = "menue";
     }
-    return;
   }
   if (isMobile) {
     changeMouseCordsAfterTime(400);
@@ -176,12 +205,13 @@ async function privateGameExists(code) {
   });
   return bol;
 }
-
-function changeMouseCordsAfterTime(time) {
-  setTimeout(function() {
-    mouseX = 2 * width;
-    mouseY = 2 * height;
-  }, time);
+if (!(mode === "privateGameJoiner" || mode === "privateGameCreator")) {
+  function changeMouseCordsAfterTime(time) {
+    setTimeout(function() {
+      mouseX = 2 * width;
+      mouseY = 2 * height;
+    }, time);
+  }
 }
 
 function roomSettingsChanger() {
@@ -189,17 +219,18 @@ function roomSettingsChanger() {
     navigator.clipboard.writeText(code);
     buttonAnimation = true;
   } else if (mouseAddScores(1) || mouseAddScores(2)) {
-    if (roomSettingsScores < 10) {
+    if (roomSettingsScores < 30) {
       roomSettingsScores++;
     } else {
       roomSettingsScores = 1;
     }
-  } else if (mouseAddRounds(1) || mouseAddRounds(2)) {
-    if (roomSettingsRounds < 10) {
-      roomSettingsRounds++;
-    } else {
-      roomSettingsRounds = 1;
-    }
+    /*} else if (mouseAddRounds(1) || mouseAddRounds(2)) {
+      if (roomSettingsRounds < 10) {
+        roomSettingsRounds++;
+      } else {
+        roomSettingsRounds = 1;
+      }
+    */
   } else if (mouseAddBallSpeed(1) || mouseAddBallSpeed(2)) {
     if (roomSettingsBallSpeed < 20) {
       roomSettingsBallSpeed++;
@@ -290,6 +321,14 @@ function roomSettingsChanger() {
 }
 
 // touch sensors for buttons --> due to getTextCords() function
+let inGameBackTxt = [
+  ["back", [0, 0, 0]],
+];
+
+function mouseInGameBack(item) {
+  txtCords = getTextCords(inGameBackTxt, item, width / 120, height / 22, "LEFT", uToF(38));
+  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+}
 let privateGameCreatorSideTxt;
 
 function mousePrivateGameCreatorSide(item) {
@@ -332,30 +371,30 @@ function mouseAddRoundsTitle() { // mouse-Title functions pointless --> new func
 let roomSettingsBallSpeedTxt;
 
 function mouseAddBallSpeed(item) {
-  let txtCords = getTextCords(roomSettingsBallSpeedTxt, item, roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBallSpeedTxt, item, roomSettingsStartX, roomSettingsStartY + 2 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 let roomSettingsBarSpeedTxt;
 
 function mouseAddBarSpeed(item) {
-  let txtCords = getTextCords(roomSettingsBarSpeedTxt, item, roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBarSpeedTxt, item, roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 function mouseAddBallSpeedTitle() {
-  let txtCords = getTextCords(roomSettingsBallSpeedTxt, 1, roomSettingsStartX, roomSettingsStartY + 3 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBallSpeedTxt, 1, roomSettingsStartX, roomSettingsStartY + 2 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 let roomSettingsExtrasTxt;
 
 function mouseChangeExtras(item) {
-  let txtCords = getTextCords(roomSettingsExtrasTxt, item, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsExtrasTxt, item, roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 function mouseChangeExtrasTitle() {
-  let txtCords = getTextCords(roomSettingsExtrasTxt, 1, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsExtrasTxt, 1, roomSettingsStartX, roomSettingsStartY + 4 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
@@ -363,51 +402,51 @@ let roomSettingsBackgroundRTxt;
 let roomSettingsBackgroundTxt;
 
 function mouseAddBackground(item) {
-  let txtCords = getTextCords(roomSettingsBackgroundTxt, item, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBackgroundTxt, item, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 function mouseAddBackgroundTitle() {
-  let txtCords = getTextCords(roomSettingsBackgroundRTxt, 1, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBackgroundRTxt, 1, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 let roomSettingsBackgroundGTxt;
 
 function mouseAddBackgroundG() { // --> pointsless
-  let txtCords = getTextCords(roomSettingsBackgroundGTxt, 3, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBackgroundGTxt, 3, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 let roomSettingsBackgroundBTxt;
 
 function mouseAddBackgroundB() {
-  let txtCords = getTextCords(roomSettingsBackgroundBTxt, 4, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBackgroundBTxt, 4, roomSettingsStartX, roomSettingsStartY + 5 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 let roomSettingsBarTxt;
 
 function mouseAddBar(item) {
-  let txtCords = getTextCords(roomSettingsBarTxt, item, roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBarTxt, item, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 let roomSettingsBarRTxt;
 
 function mouseAddBarR() {
-  let txtCords = getTextCords(roomSettingsBarRTxt, 2, roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBarRTxt, 2, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 
 let roomSettingsBarGTxt;
 
 function mouseAddBarG() {
-  let txtCords = getTextCords(roomSettingsBarGTxt, 3, roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBarGTxt, 3, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 let roomSettingsBarBTxt;
 
 function mouseAddBarB() {
-  let txtCords = getTextCords(roomSettingsBarBTxt, 4, roomSettingsStartX, roomSettingsStartY + 7 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
+  let txtCords = getTextCords(roomSettingsBarBTxt, 4, roomSettingsStartX, roomSettingsStartY + 6 * roomSettingsChangeRate, "LEFT", roomSettingsSize);
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
 }
 

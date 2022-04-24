@@ -3,6 +3,9 @@
 let mainPath = "Pong/"
 let childUserpath = "Users/";
 let childPrivateRoomsPath = "privateRooms/";
+
+let ballWidth = 22; // 25
+let ballYCorrectionTimes = 3; // odd integer makes most sense
 // aesthetic
 let offButtonCol = [233,233,233];
 

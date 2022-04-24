@@ -4,11 +4,7 @@ function privateGameCreator() {
     bar1Y = height / 2;
     bar2Y = height / 2;
   }
-  background(roomSettingsBackgroundR, roomSettingsBackgroundG, roomSettingsBackgroundB);
-  drawLines();
   privateGameCreatorTxts();
-  drawBar1();
-  drawBar2();
 }
 
 
@@ -18,13 +14,17 @@ function privateGameJoiner() {
     bar1Y = height / 2;
     bar2Y = height / 2;
   }
-  background(roomSettingsBackgroundR, roomSettingsBackgroundG, roomSettingsBackgroundB);
-  drawLines();
   privateGameJoinerTxts();
-  drawBar1();
-  drawBar2();
 }
 
+function gameDeleted() {
+  inGameBack();
+  textAlign(CENTER);
+  textSize(uToF(80));
+  fill(offButtonCol[0], offButtonCol[1], offButtonCol[2]);
+  text("Game was deleted :(", width / 2, height / 2);
+  textAlign(LEFT);
+}
 let bar1Y;
 let privateGameFirst = true;
 let side = "LEFT";
@@ -240,6 +240,21 @@ function drawLines() {
   }
 }
 
+function inGameBack() {
+  textSize(uToF(38));
+  let finalColors = [];
+  if (mouseInGameBack(1)) {
+    finalColors = [onButtonColCreateRoom];
+  } else {
+    finalColors = [
+      [offButtonCol[0] / 3, offButtonCol[1] / 3, offButtonCol[2] / 3]
+    ];
+  }
+  inGameBackTxt = [
+    ["back", finalColors[0]],
+  ];
+  drawtext(width / 120, height / 22, inGameBackTxt, "LEFT", uToF(38));
+}
 let opponentReady = false;
 
 function privateGameCreatorTxts() {
@@ -306,45 +321,71 @@ function privateGameJoinerTxts() {
   }
 }
 
-let bar1YCopy = 0;
-let bar2YCopy = 0;
+let bar1YCopy = 955 / 2;
+let bar2YCopy = 955 / 2;
 
-function gotData(data) {
-  dataVal = data.val();
+function gotDataOpponentReady(data) {
+  let dataVal = data.val();
   if (opponentReady === false) {
-    if (dataVal.opponentReady === true) {
+    if (dataVal === true) {
       opponentReady = true;
       bar1Y = height / 2;
       bar2Y = height / 2;
     }
   }
-  if (mode === "privateGameCreator") {
+}
+
+function gotDataBar2Y(data) {
+  let dataVal = data.val();
+  if (!(dataVal === null)) {
     if (side === "RIGHT") {
-      if (bar2YCopy != dataVal.bar2Y) {
-        bar2YCopy = dataVal.bar2Y;
+      if (bar2YCopy != dataVal) {
+        bar2YCopy = dataVal;
         bar1Y = uToC(null, bar2YCopy);
       }
-      direction1 = dataVal.bar2;
     } else {
-      if (bar2YCopy != dataVal.bar2Y) {
-        bar2YCopy = dataVal.bar2Y;
+      if (bar2YCopy != dataVal) {
+        bar2YCopy = dataVal;
         bar2Y = uToC(null, bar2YCopy);
       }
-      direction2 = dataVal.bar2;
     }
-  } else if (mode === "privateGameJoiner") {
+  } else {
+    mode = "gameDeleted";
+  }
+}
+
+function gotDataBar2(data) {
+  let dataVal = data.val();
+  direction1 = dataVal;
+  direction2 = dataVal;
+}
+
+
+function gotDataBar1(data) {
+  let dataVal = data.val();
+  direction1 = dataVal;
+  direction2 = dataVal;
+}
+
+function gotDataBar1Y(data) {
+  let dataVal = data.val();
+  if (!(dataVal === null)) {
     if (side === "RIGHT") {
-      if (bar1YCopy != dataVal.bar1Y) {
-        bar1YCopy = dataVal.bar1Y;
+      if (bar1YCopy != dataVal) {
+        bar1YCopy = dataVal;
         bar1Y = uToC(null, bar1YCopy);
       }
-      direction1 = dataVal.bar1;
     } else {
-      if (bar1YCopy != dataVal.bar1Y) {
-        bar1YCopy = dataVal.bar1Y;
+      if (bar1YCopy != dataVal) {
+        bar1YCopy = dataVal;
         bar2Y = uToC(null, bar1YCopy);
       }
-      direction2 = dataVal.bar1;
     }
+  } else {
+    mode = "gameDeleted";
   }
+}
+
+function errData() {
+  mode = "gameDeleted";
 }

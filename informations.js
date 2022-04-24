@@ -1,15 +1,51 @@
 async function getIP() {
   let res = null;
   let apiKey = "1be9a6884abd4c3ea143b59ca317c6b2";
-  await $.getJSON(
-    "https://ipgeolocation.abstractapi.com/v1/?api_key=" + apiKey,
-    function(data) {
-      res = JSON.stringify(data, null, 2);
-    }
-  );
-  res = res.split('"');
-  res = res[3];
+  await $.getJSON("https://api.ipify.org?format=json", function(data) {
+    res = data.ip;
+  });
   return res;
+  /*$.get("http://ipinfo.io", function(response) {
+    alert(response.ip);
+  }, "jsonp");
+  /*$.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+    // Convert key-value pairs to JSON
+    // https://stackoverflow.com/a/39284735/452587
+    data = data.trim().split('\n').reduce(function(obj, pair) {
+      pair = pair.split('=');
+      return obj[pair[0]] = pair[1], obj;
+    }, {});
+    console.log(data);
+  });*/
+  /*$.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+    console.log(JSON.stringify(data, null, 2));
+  });
+  /*$.ajax({
+    url: 'https://api.my-ip.io/ip.jsonp',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("Authorization", "Bearer 6QXNMEMFHNY4FJ5ELNFMP5KRW52WFXN5")
+    },
+    success: function(data) {
+      alert(data);
+      //process the JSON data etc
+    }
+  })*/
+  //  await $.getJSON(
+  //  "https://api.my-ip.io/ip.json",
+  //  function(data) {
+  /*fetch('https://api.ipify.org/?format=json', {
+      mode: 'cors'
+    })
+    .then((resp) => resp.json())
+    .then((ip) => {
+      return ip;
+    });/*
+  //res = data; //JSON.stringify(data, null, 2);
+  //  }
+  //  );
+  /*res = res.split('"');
+  res = res[3];*/
+  //return res.ip;
 }
 
 async function getUnixTimestamp() { // UNIX-Timestamp
