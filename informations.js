@@ -5,7 +5,9 @@ async function getIP() {
       res = data.ip;
     });
   } catch (error) {
-    console.log("aaadddblooocker");
+    await $.getJSON('https://api.db-ip.com/v2/free/self', function(data) {
+      res = JSON.stringify(data, null, 2);
+    });
   }
   return res;
   /*$.get("http://ipinfo.io", function(response) {
