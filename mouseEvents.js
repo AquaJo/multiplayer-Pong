@@ -210,8 +210,9 @@ async function privateGameExists(code) {
   });
   return bol;
 }
-if (!(mode === "privateGameJoiner" || mode === "privateGameCreator")) {
+
   function changeMouseCordsAfterTime(time) {
+    if (!(mode === "privateGameJoiner" || mode === "privateGameCreator")) {
     setTimeout(function() {
       mouseX = 2 * width;
       mouseY = 2 * height;
