@@ -1,9 +1,12 @@
 async function getIP() {
   let res = null;
-  let apiKey = "1be9a6884abd4c3ea143b59ca317c6b2";
-  await $.getJSON("https://api.ipify.org?format=json", function(data) {
-    res = data.ip;
-  });
+  try {
+    await $.getJSON("https://api.ipify.org?format=json", function(data) {
+      res = data.ip;
+    });
+  } catch (error) {
+    console.log("aaadddblooocker");
+  }
   return res;
   /*$.get("http://ipinfo.io", function(response) {
     alert(response.ip);
