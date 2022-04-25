@@ -131,9 +131,9 @@ function drawBar2() {
         direction2 = "DOWN";
       }
     } else {
-      if (keyIsDown(87)) {
+      if (keyIsDown(87) || keyIsDown(38)) {
         direction2 = "UP";
-      } else if (keyIsDown(83)) {
+      } else if (keyIsDown(83) || keyIsDown(40)) {
         direction2 = "DOWN";
       }
     }
