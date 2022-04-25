@@ -122,7 +122,7 @@ async function mousePressed() {
       if (!isMobile) {
       navigator.clipboard.writeText(code);
       } else {
-        
+        code.select();
       }
     } else {
       textSize(uToF(60));
