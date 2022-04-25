@@ -25,8 +25,10 @@ function mainMenue() {
       width / 4.7,
       (height / 3.6) + height / 5
     );
+    if(!isMobile) {
     inputOnceJ();
     inpJ.show();
+    }
     try {
       inpJ.position(width / 4.7 + width / 5, height / 2.35);
     } catch (error) {}
