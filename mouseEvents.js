@@ -73,7 +73,7 @@ async function mousePressed() {
       if(!isMobile) {
       code = inpJText;
       } else {
-        let pr = prompt("type in the code here");
+        let pr = "test"; //prompt("type in the code here");
         code = pr;
       }
       if (await privateGameExists(code) && !(await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady"))) {
