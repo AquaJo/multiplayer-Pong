@@ -41,6 +41,8 @@ async function mousePressed() {
     }
   } else if (mode === "menue") {
     if (mouseContinueResizeAgain()) {
+      prompt();
+      
       inpJ.hide();
       // adjust to window size
       height = window.innerHeight;
