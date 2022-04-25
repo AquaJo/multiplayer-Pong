@@ -72,7 +72,12 @@ async function mousePressed() {
       inpJ.show();
       mode = "createRoom";
     } else if (mouseContinueJoin()) {
+      if(!isMobile) {
       code = inpJText;
+      } else {
+        let pr = prompt();
+        code = pr;
+      }
       if (await privateGameExists(code) && !(await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady"))) {
         roomSettingsScores = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/scoresPerRound");
         roomSettingsRounds = await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/settings/rounds");
