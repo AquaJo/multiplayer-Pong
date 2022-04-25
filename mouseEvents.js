@@ -41,8 +41,6 @@ async function mousePressed() {
     }
   } else if (mode === "menue") {
     if (mouseContinueResizeAgain()) {
-      prompt();
-      
       inpJ.hide();
       // adjust to window size
       height = window.innerHeight;
@@ -75,7 +73,7 @@ async function mousePressed() {
       if(!isMobile) {
       code = inpJText;
       } else {
-        let pr = prompt();
+        let pr = prompt("type in the code here");
         code = pr;
       }
       if (await privateGameExists(code) && !(await getData(mainPath + "/" + childPrivateRoomsPath + "/" + code + "/game/opponentReady"))) {
