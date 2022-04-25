@@ -59,7 +59,7 @@ function inputOnceJ() {
     inpJ.input(inpJEvent);
     inpJ.show();
     inpJ.position(width / 4.7 + width / 5, height / 2.35);
-    inpJ.style('height', height / 20 + "px");
+    /*inpJ.style('height', height / 20 + "px");
     inpJ.style('width', width / 2.5 + "px");
     inpJ.style('border:2px solid #aaa');
     inpJ.style('border-radius:4px');
@@ -67,7 +67,7 @@ function inputOnceJ() {
     inpJ.style('outline:none');
     inpJ.style('padding:8px');
     inpJ.style('box-sizing:border-box');
-    inpJ.style('transition:.0s');
+    inpJ.style('transition:.0s');*/
   }
 }
 function inpJEvent() {
