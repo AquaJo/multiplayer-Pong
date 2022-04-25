@@ -119,7 +119,11 @@ async function mousePressed() {
   } else if (mode === "privateGameCreator") {
     textSize(uToF(32));
     if (mouseInGameCodeCopy(3)) {
+      if (!isMobile) {
       navigator.clipboard.writeText(code);
+      } else {
+        
+      }
     } else {
       textSize(uToF(60));
     }
