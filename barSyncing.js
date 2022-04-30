@@ -1,19 +1,20 @@
 function privateGameCreator() {
-  if (privateGameFirst) {
-    privateGameFirst = false;
-    bar1Y = height / 2;
-    bar2Y = height / 2;
-  }
+  resetsGame();
   privateGameCreatorTxts();
 }
 
-
-function privateGameJoiner() {
+function resetsGame() {
   if (privateGameFirst) {
     privateGameFirst = false;
+    oldTimerNum = 999;
+    timerNum = 4;
     bar1Y = height / 2;
     bar2Y = height / 2;
   }
+}
+
+function privateGameJoiner() {
+  resetsGame();
   privateGameJoinerTxts();
 }
 
