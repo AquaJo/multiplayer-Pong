@@ -31,6 +31,7 @@ async function mousePressed() {
         mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
         mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
         mainRef.child(childUserpath + "/" + enIP + "/height").set(height);
+        console.group("registration");
         console.log("unixTimestamp: " + date);
         console.log("user-IP got registrated on database with expiretime of 1 week");
       } else {
@@ -40,7 +41,9 @@ async function mousePressed() {
 
         width = getCookie("properties")[0];
         height = getCookie("properties")[1];
-        console.log("firebase log was deleted in case and element properties was created / overritten through cookies");
+        console.group("registration");
+        console.log("firebase log was deleted in case");
+        console.log("element properties was created / overritten through cookies");
       }
       console.groupEnd();
     } else {

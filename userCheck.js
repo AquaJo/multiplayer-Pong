@@ -1,9 +1,14 @@
 let enIP = "undefined";
 let userExists = false;
 async function checkUser() {
+  console.group("usercheckprotocoll");
   await firebaseCheckUser();
   if (!userExists) {
     cookieCheckUser();
+  }
+  if (!userExists) {
+    console.log("user didnt exist --> user registration")
+    console.groupEnd();
   }
   return userExists;
 }
@@ -24,7 +29,6 @@ async function userExistsOnDB(IP) {
 
 async function firebaseCheckUser() {
   //------------------
-  console.group("usercheckprotocoll");
   let IP = await getIP();
   console.log("detected IP: " + IP);
   enIP = encryptionVigenere(IP, "g32Ñá漢6字3sdäÜaនក្zg21u8zgu");
