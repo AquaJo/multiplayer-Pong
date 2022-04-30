@@ -45,22 +45,24 @@ resizerChoice = "IP";
 let resizerSettingsStartX;
 let resizerSettingsStartY;
 let resizerSettingsChangeRate;
+
 function resizeOptions() {
   resizerSettingsStartX = width / 50;
   resizerSettingsStartY = height / 20;
-  resizerSettingsChangeRate = height/12;
+  resizerSettingsChangeRate = height / 12;
   textSize(uToF(40));
   fill(255, 255, 255);
   textAlign(LEFT);
   text("by pressing 'continue' the data will be saved  ...", width / 50, height / 20);
 
   resizeOptionsIP();
+  resizeOptionsCookies();
 }
 
 function resizeOptionsIP() {
   let finalColors = [];
   resizerIPTxt = [
-    ["... through your public IPv4-address", finalColors[0]],
+    ["... through logging your public IPv4-address", finalColors[0]],
     ["  ", finalColors[0]]
   ];
   if (mouseChangeIPSave(1)) {
@@ -72,9 +74,31 @@ function resizeOptionsIP() {
   }
 
   resizerIPTxt = [
-    ["... through your public IPv4-address", finalColors[0]],
+    ["... through logging your public IPv4-address", finalColors[0]],
     ["  ", finalColors[0]]
   ];
 
   drawtext(resizerSettingsStartX, resizerSettingsStartY + 1 * resizerSettingsChangeRate, resizerIPTxt);
+}
+
+function resizeOptionsCookies() {
+  let finalColors = [];
+  resizerCookiesTxt = [
+    ["... through cookies", finalColors[0]],
+    ["  ", finalColors[0]]
+  ];
+  if (mouseChangeCookieSave(1)) {
+    finalColors = [onButtonCol];
+  } else if (resizerChoice === "cookies") {
+    finalColors = [onButtonColCreateRoom];
+  } else {
+    finalColors = [offButtonCol];
+  }
+
+  resizerCookiesTxt = [
+    ["... through cookies", finalColors[0]],
+    ["  ", finalColors[0]]
+  ];
+
+  drawtext(resizerSettingsStartX, resizerSettingsStartY + 2 * resizerSettingsChangeRate, resizerCookiesTxt);
 }

@@ -37,6 +37,9 @@ async function mousePressed() {
       textSize(uToF(40));
       if (mouseChangeIPSave(1)) {
         resizerChoice = "IP";
+      } else if (mouseChangeCookieSave(1)) {
+        //resizerChoice = "cookies";
+        //mainRef.child(childUserPath + "/" + enIP).remove();
       }
     }
   } else if (mode === "menue") {
@@ -122,7 +125,7 @@ async function mousePressed() {
       if (!isMobile) {
       navigator.clipboard.writeText(code);
       } else {
-        
+
       }
     } else {
       textSize(uToF(60));
@@ -340,6 +343,12 @@ let inGameBackTxt = [
   ["back", [0, 0, 0]],
 ];
 
+
+let resizerCookiesTxt;
+function mouseChangeCookieSave(item) {
+  let txtCords = getTextCords(resizerCookiesTxt, item, resizerSettingsStartX, resizerSettingsStartY + 2 * resizerSettingsChangeRate, "LEFT", uToF(40));
+  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+}
 let resizerIPTxt;
 
 function mouseChangeIPSave(item) {
