@@ -67,7 +67,7 @@ function resizeOptionsIP() {
   ];
   if (mouseChangeIPSave(1)) {
     finalColors = [onButtonCol];
-  } else if (resizerChoice === "IP") {
+  } else if (saveChoice === "IP") {
     finalColors = [onButtonColCreateRoom];
   } else {
     finalColors = [offButtonCol];
@@ -89,7 +89,7 @@ function resizeOptionsCookies() {
   ];
   if (mouseChangeCookieSave(1)) {
     finalColors = [onButtonCol];
-  } else if (resizerChoice === "cookies") {
+  } else if (saveChoice === "cookies") {
     finalColors = [onButtonColCreateRoom];
   } else {
     finalColors = [offButtonCol];

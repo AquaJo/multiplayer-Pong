@@ -26,27 +26,29 @@ async function mousePressed() {
     } else if (mouseContinueZoom()) { // continue
       input = true;
       mode = "menue";
-      if (saveChoice == "IP") {
+      if (saveChoice == "IP") { // no deletion because first check through firebase //--> standart saving option
         let date = await getUnixTimestamp();
         mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
         mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
         mainRef.child(childUserpath + "/" + enIP + "/height").set(height);
         console.log("unixTimestamp: " + date);
         console.log("user-IP got registrated on database with expiretime of 1 week");
-        console.groupEnd();
       } else {
+        mainRef.child(childUserpath + "/" + enIP).remove();
+        // save height, width through cookies
+        createCookie("properties", width + "," + height, expDays);
+
         width = getCookie("properties")[0];
         height = getCookie("properties")[1];
+        console.log("firebase log was deleted in case and element properties was created / overritten through cookies");
       }
+      console.groupEnd();
     } else {
       textSize(uToF(40));
       if (mouseChangeIPSave(1)) {
         saveChoice = "IP";
       } else if (mouseChangeCookieSave(1)) {
         saveChoice = "cookies";
-        mainRef.child(childUserpath + "/" + enIP).remove();
-        // save height, width through cookies
-        createCookie("properties", width + "," + height, expDays);
       }
     }
   } else if (mode === "menue") {

@@ -19,7 +19,7 @@ async function setup() {
 
   if (await checkUser() == true) { // check if user already choosed his window size
     mode = "menue";
-    if (saveChoice = "IP") {
+    if (saveChoice === "IP") {
       width = await getData(mainPath + childUserpath + enIP + "/width");
       height = await getData(mainPath + childUserpath + enIP + "/height");
     } else {
