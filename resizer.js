@@ -41,7 +41,7 @@ function resizer() {
     height / 1.1
   );
 }
-resizerChoice = "IP";
+saveChoice = "IP";
 let resizerSettingsStartX;
 let resizerSettingsStartY;
 let resizerSettingsChangeRate;

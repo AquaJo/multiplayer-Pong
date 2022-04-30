@@ -42,6 +42,7 @@ async function firebaseCheckUser() {
 function cookieCheckUser() {
   if (getCookie("properties") != "") {
     userExists = true;
+    saveChoice = "cookies"
   }
 }
 

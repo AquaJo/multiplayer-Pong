@@ -26,20 +26,27 @@ async function mousePressed() {
     } else if (mouseContinueZoom()) { // continue
       input = true;
       mode = "menue";
-      let date = await getUnixTimestamp();
-      mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
-      mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
-      mainRef.child(childUserpath + "/" + enIP + "/height").set(height);
-      console.log("unixTimestamp: " + date);
-      console.log("user-IP got registrated on database with expiretime of 1 week");
-      console.groupEnd();
+      if (saveChoice == "IP") {
+        let date = await getUnixTimestamp();
+        mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
+        mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
+        mainRef.child(childUserpath + "/" + enIP + "/height").set(height);
+        console.log("unixTimestamp: " + date);
+        console.log("user-IP got registrated on database with expiretime of 1 week");
+        console.groupEnd();
+      } else {
+        width = getCookie("properties")[0];
+        height = getCookie("properties")[1];
+      }
     } else {
       textSize(uToF(40));
       if (mouseChangeIPSave(1)) {
-        resizerChoice = "IP";
+        saveChoice = "IP";
       } else if (mouseChangeCookieSave(1)) {
-        //resizerChoice = "cookies";
-        //mainRef.child(childUserPath + "/" + enIP).remove();
+        saveChoice = "cookies";
+        mainRef.child(childUserpath + "/" + enIP).remove();
+        // save height, width through cookies
+        createCookie("properties", width + "," + height, expDays);
       }
     }
   } else if (mode === "menue") {
@@ -74,7 +81,7 @@ async function mousePressed() {
       mode = "createRoom";
     } else if (mouseContinueJoin()) {
       if (!isMobile) {
-      code = inpJText;
+        code = inpJText;
       } else {
         let pr = prompt("type your code here");
         code = pr;
@@ -123,7 +130,7 @@ async function mousePressed() {
     textSize(uToF(32));
     if (mouseInGameCodeCopy(3)) {
       if (!isMobile) {
-      navigator.clipboard.writeText(code);
+        navigator.clipboard.writeText(code);
       } else {
 
       }
@@ -204,6 +211,7 @@ async function mousePressed() {
   }
 }
 
+
 async function privateGameExists(code) {
   let refStr = mainPath + "/" + childPrivateRoomsPath;
   let ref = database.ref(refStr);
@@ -223,8 +231,8 @@ async function privateGameExists(code) {
   return bol;
 }
 
-  function changeMouseCordsAfterTime(time) {
-    if (!(mode === "privateGameJoiner" || mode === "privateGameCreator")) {
+function changeMouseCordsAfterTime(time) {
+  if (!(mode === "privateGameJoiner" || mode === "privateGameCreator")) {
     setTimeout(function() {
       mouseX = 2 * width;
       mouseY = 2 * height;
@@ -345,6 +353,7 @@ let inGameBackTxt = [
 
 
 let resizerCookiesTxt;
+
 function mouseChangeCookieSave(item) {
   let txtCords = getTextCords(resizerCookiesTxt, item, resizerSettingsStartX, resizerSettingsStartY + 2 * resizerSettingsChangeRate, "LEFT", uToF(40));
   return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
