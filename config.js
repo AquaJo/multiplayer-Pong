@@ -17,6 +17,8 @@ let backgroundCol = [20,20,20];
 
 
 let barsXFromEdge = 8; // in percent from edge
+// cookies settings
+let expDays = 100;
 // firebase - settings
 let mainRef;
 function firebaseCfg() {
