@@ -2,7 +2,6 @@ let height = null;
 let width = null;
 let isMobile;
 async function setup() {
-  console.log("shoudnt be here");
   isMobile = window.mobileAndTabletCheck();
   textFont("Rubik Wet Paint");
   textFont("Black Ops One");
