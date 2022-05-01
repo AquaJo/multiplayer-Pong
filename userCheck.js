@@ -8,8 +8,8 @@ async function checkUser() {
   }
   if (!userExists) {
     console.log("user didnt exist --> user registration")
-    console.groupEnd();
   }
+  console.groupEnd();
   return userExists;
 }
 
@@ -41,14 +41,12 @@ async function firebaseCheckUser() {
     //console.log(userExists);
     if (userExists) {
       console.log("user-IP already existed on database");
-      console.groupEnd();
     } else {}
     //decryptionVigenere(enIP, "▓Ñá漢6字3sdäÜaនក្zg21u8zgu");
   } catch (error) {
     saveChoice = "cookies";
     adblocker = true;
     console.log("couldn't receive public IPv4 of client");
-    console.groupEnd();
   }
 }
 
@@ -57,7 +55,6 @@ function cookieCheckUser() {
     userExists = true;
     saveChoice = "cookies";
     console.log("user already existed through cookies");
-    console.groupEnd();
   }
 }
 
