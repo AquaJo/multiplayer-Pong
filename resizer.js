@@ -61,32 +61,47 @@ function resizeOptions() {
 
 function resizeOptionsIP() {
   let finalColors = [];
-  resizerIPTxt = [
-    ["... through logging your public IPv4-address", finalColors[0]],
-    ["  ", finalColors[0]]
-  ];
+  if (!adblocker) {
+    resizerIPTxt = [
+      ["... through logging your public IPv4-address", finalColors[0]],
+      ["  ", finalColors[0]]
+    ];
+  } else {
+    resizerIPTxt = [
+      ["... through logging your public IPv4-address // not possible (adblocker)", finalColors[0]],
+      ["  ", finalColors[0]]
+    ];
+  }
   if (mouseChangeIPSave(1)) {
     finalColors = [onButtonCol];
   } else if (saveChoice === "IP") {
-    finalColors = [onButtonColCreateRoom];
+    finalColors = [onButtonColCreateRoom]; // no extra if !adblocker needed, because mouseChangeIPSave return always false in case
   } else {
     finalColors = [offButtonCol];
   }
-
-  resizerIPTxt = [
-    ["... through logging your public IPv4-address", finalColors[0]],
-    ["  ", finalColors[0]]
-  ];
+  if (!adblocker) {
+    resizerIPTxt = [
+      ["... through logging your public IPv4-address", finalColors[0]],
+      ["  ", finalColors[0]]
+    ];
+  } else {
+    resizerIPTxt = [
+      ["... through logging your public IPv4-address // not possible (adblocker)", offButtonCol],
+      ["  ", finalColors[0]]
+    ];
+  }
 
   drawtext(resizerSettingsStartX, resizerSettingsStartY + 1 * resizerSettingsChangeRate, resizerIPTxt);
 }
 
 function resizeOptionsCookies() {
   let finalColors = [];
+
   resizerCookiesTxt = [
     ["... through cookies", finalColors[0]],
     ["  ", finalColors[0]]
   ];
+
   if (mouseChangeCookieSave(1)) {
     finalColors = [onButtonCol];
   } else if (saveChoice === "cookies") {

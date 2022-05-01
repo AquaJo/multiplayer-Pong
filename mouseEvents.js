@@ -368,8 +368,11 @@ function mouseChangeCookieSave(item) {
 let resizerIPTxt;
 
 function mouseChangeIPSave(item) {
-  let txtCords = getTextCords(resizerIPTxt, item, resizerSettingsStartX, resizerSettingsStartY + 1 * resizerSettingsChangeRate, "LEFT", uToF(40));
-  return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+  if (!adblocker) {
+    let txtCords = getTextCords(resizerIPTxt, item, resizerSettingsStartX, resizerSettingsStartY + 1 * resizerSettingsChangeRate, "LEFT", uToF(40));
+    return mouseX > txtCords[0] && mouseY > txtCords[1] && mouseX < txtCords[2] && mouseY < txtCords[3];
+  }
+  return false;
 }
 
 function mouseInGameBack(item) {

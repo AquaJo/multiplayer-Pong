@@ -27,20 +27,29 @@ async function userExistsOnDB(IP) {
   return res;
 }
 
+let adblocker = false;
 async function firebaseCheckUser() {
   //------------------
-  let IP = await getIP();
-  console.log("detected IP: " + IP);
-  enIP = encryptionVigenere(IP, "g32Ñá漢6字3sdäÜaនក្zg21u8zgu");
-  console.log("'encoded' IP for possible database-upload: " + enIP);
+  let IP = "not found";
+  try {
+    let IP = await getIP();
+    console.log("detected IP: " + IP);
+    enIP = encryptionVigenere(IP, "g32Ñá漢6字3sdäÜaនក្zg21u8zgu");
+    console.log("'encoded' IP for possible database-upload: " + enIP);
 
-  userExists = await userExistsOnDB(enIP);
-  //console.log(userExists);
-  if (userExists) {
-    console.log("user-IP already existed on database");
+    userExists = await userExistsOnDB(enIP);
+    //console.log(userExists);
+    if (userExists) {
+      console.log("user-IP already existed on database");
+      console.groupEnd();
+    } else {}
+    //decryptionVigenere(enIP, "▓Ñá漢6字3sdäÜaនក្zg21u8zgu");
+  } catch (error) {
+    saveChoice = "cookies";
+    adblocker = true;
+    console.log("couldn't receive public IPv4 of client");
     console.groupEnd();
-  } else {}
-  //decryptionVigenere(enIP, "▓Ñá漢6字3sdäÜaនក្zg21u8zgu");
+  }
 }
 
 function cookieCheckUser() {
