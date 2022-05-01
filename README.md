@@ -1,5 +1,5 @@
 ## multiplayer-Pong
-Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fixxes are planned. Also many more features are planned. \
+Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fixxes are planned. Also many more features are planned. 
 
 *Sites:* 
  - https://pong.gq 
