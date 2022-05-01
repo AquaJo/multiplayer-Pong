@@ -78,11 +78,11 @@ let roomsSettingsSize;
 function roomSettings() {
   roomSettingsStartX = width / 9;
   roomSettingsStartY = (height / 6);
-  roomSettingsChangeRate = (height / 10);
+  roomSettingsChangeRate = (height / 10.7);
   textAlign(LEFT);
   textSize(uToF(70));
   roomSettingsSize = uToF(70);
-  if (mouseRoomSettingsLastLine(3)) {
+  if (mouseRoomSettingsLastLine(3) || mouseRoomSettingsLastLine(5)) {
     color = [onButtonColCreateRoom[0] / 2, onButtonColCreateRoom[1], onButtonColCreateRoom[2]];
   } else {
     color = offButtonCol; // because offButtonCol later added
@@ -95,6 +95,8 @@ function roomSettings() {
   extras();
   backgroundColor();
   barColors();
+
+  //loadSetting();
 }
 let roomSettingsScores = 5;
 
@@ -300,20 +302,26 @@ function createRoomButton() { // last line --> edited later on
   let finalColors = [];
   roomSettingsLastLineTxt = [
     ["back", finalColors[0]],
-    ["                          ", null],
-    ["create room", finalColors[1]]
+    ["         ", null],
+    ["create room", finalColors[1]],
+    ["         ", null],
+    ["save", finalColors[2]]
   ];
   if (mouseRoomSettingsLastLine(1)) {
-    finalColors = [onButtonColCreateRoom, offButtonCol];
+    finalColors = [onButtonColCreateRoom, offButtonCol, offButtonCol];
   } else if (mouseRoomSettingsLastLine(3)) {
-    finalColors = [offButtonCol, onButtonColCreateRoom];
+    finalColors = [offButtonCol, onButtonColCreateRoom, offButtonCol];
+  } else if (mouseRoomSettingsLastLine(5)){
+    finalColors = [offButtonCol, offButtonCol, onButtonColCreateRoom];
   } else {
-    finalColors = [offButtonCol, offButtonCol];
+    finalColors = [offButtonCol, offButtonCol, offButtonCol];
   }
   roomSettingsLastLineTxt = [
     ["back", finalColors[0]],
-    ["                          ", null],
-    ["create room", finalColors[1]]
+    ["         ", null],
+    ["create room", finalColors[1]],
+    ["         ", null],
+    ["save", finalColors[2]]
   ];
   drawtext(width / 2, height / 1.14, roomSettingsLastLineTxt, "CENTER", uToF(70));
 }

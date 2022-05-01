@@ -130,6 +130,8 @@ async function mousePressed() {
     } else if (mouseRoomSettingsLastLine(1)) {
       inpJ.show();
       mode = "menue";
+    } else if (mouseRoomSettingsLastLine(5)) {
+
     }
   } else if (mode === "privateGameCreator") {
     textSize(uToF(32));
