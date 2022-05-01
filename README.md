@@ -4,3 +4,6 @@ Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fix
 *Sites:* 
  - https://pong.gq 
  - https://multiplayer-pong.ml --> direct github repo clone
+
+## credits:
+- thanks to p5js for the library
