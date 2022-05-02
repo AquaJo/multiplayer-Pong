@@ -2,7 +2,7 @@ function cToU(x, y) {
   let res;
   let resX;
   let resY;
-  if (x != null && y != null) {
+  //if (x != null && y != null) { // dont know why I added this anymore ;)
     if (x == null) {
       resY = map(y, 0, height, 0, 955);
       res = resY;
@@ -17,7 +17,7 @@ function cToU(x, y) {
         resY
       };
     }
-  }
+  //}
   return res;
 }
 

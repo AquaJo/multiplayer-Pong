@@ -15,6 +15,7 @@ function privateGame() {
     counterXY = 0;
     let final = (side === "LEFT") ? cToU(null, bar1Y) : cToU(null, bar2Y);
     if (mode === "privateGameCreator") {
+      console.log(map(bar1Y, 0, height, 0, 955));
       mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar1Y").set(final);
     } else if (mode === "privateGameJoiner") {
       mainRef.child(childPrivateRoomsPath + "/" + code + "/game/bar2Y").set(final);

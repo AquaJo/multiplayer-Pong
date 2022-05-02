@@ -207,8 +207,7 @@ async function mousePressed() {
       direction2 = 0;
       createRoomStart = true;
       privateGameFirst = true;
-      timerGame = true;
-      timerNum = 4;
+
       side = "LEFT";
       mode = "menue";
     }

@@ -6,8 +6,6 @@ function privateGameCreator() {
 function resetsGame() {
   if (privateGameFirst) {
     privateGameFirst = false;
-    oldTimerNum = 999;
-    timerNum = 4;
     bar1Y = height / 2;
     bar2Y = height / 2;
   }
@@ -327,6 +325,8 @@ let bar2YCopy = 955 / 2;
 
 function gotDataOpponentReady(data) {
   let dataVal = data.val();
+  oldTimerNum = 999;
+  timerNum = 4;
   if (opponentReady === false) {
     if (dataVal === true) {
       opponentReady = true;
