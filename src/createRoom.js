@@ -328,7 +328,7 @@ function createRoomButton() { // last line --> edited later on
 
 function codeDisplay() {
   if (createRoomStart) {
-    code = createRandomCode(14);
+    code = createRandomCode(5);
     createRoomStart = false;
   }
   textAlign(CENTER);
