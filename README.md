@@ -1,11 +1,11 @@
 ## multiplayer-Pong
 
-Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fixxes are planned. Also many more features are planned. 
+Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fixes are planned. Also many more features are planned.
 
-save buton in "create room" is in progress
+save button in "create room" is in progress
 
-*Sites:* 
- - https://pong.gq 
+*Sites:*
+ - https://pong.gq
  - https://multiplayer-pong.ml --> direct github repo clone
 
 ## credits:
