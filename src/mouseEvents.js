@@ -26,7 +26,7 @@ async function mousePressed() {
     } else if (mouseContinueZoom()) { // continue
       input = true;
       mode = "menue";
-      if (saveChoice == "IP") { // no deletion because first check through firebase //--> standart saving option
+      if (saveChoice === "IP") { // no deletion because first check through firebase //--> standart saving option
         let date = await getUnixTimestamp();
         mainRef.child(childUserpath + "/" + enIP + "/date").set(date);
         mainRef.child(childUserpath + "/" + enIP + "/width").set(width);
