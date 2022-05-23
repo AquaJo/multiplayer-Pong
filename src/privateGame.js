@@ -224,7 +224,7 @@ let oldYC = 0;
 
 function gotDataYChange(data) { // was, wenn y-change unveränderlich , ---> wegen wait --> false
   let dataVal = data.val();
-  ballYC = uToC(null, dataVal);
+  ballYC = uToC(null, dataVal)/2;
   if (!firstDataReceive) {
     /*if ((side === "RIGHT" && mode === "privateGameCreator") || (side === "LEFT" && mode === "privateGameJoiner")) {
       ballYC *= -1;
