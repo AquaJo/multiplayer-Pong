@@ -1,5 +1,5 @@
 ## multiplayer-Pong
-// currently working on another, bigger project, ... an chrome extension named "moonloader"
+// currently working on other stuff
 
 
 Multiplayer Pong-Game in development. Its kinda functioning, but pending bug-fixes are planned (maybe in the future). Also many more features are planned (maybe in the future).
